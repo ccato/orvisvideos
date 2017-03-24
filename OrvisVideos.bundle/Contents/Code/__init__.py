@@ -18,6 +18,7 @@ CATEGORY_LIST = [
     {'title': 'Editors Choice', 'key': 'editors-choice'}
 ]
 
+
 ####################################################################################################
 def Start():
     ObjectContainer.title1 = TITLE
@@ -41,24 +42,24 @@ def VideoList(title, category, page=1):
     videos = XML.ElementFromURL(URL_PATTERN % (category))
 
     for video in videos.xpath('//item'):
-        title = video.xpath('./title/text()')[0]
-        cdata = video.xpath('./description/text()')[0]
-        datael = HTML.ElementFromString(cdata)
-        thumb = datael.xpath('./p[1]/img/@src')[0]
-        videoinfo = datael.xpath('./p[2]/text()')[0]
-        vinfo = videoinfo[1:-1]
-        parts = vinfo.split()
-        if "vimeo" in parts[0]:
-            url = "https://vimeo.com/" + parts[1]
-        else:
-            url = "https://www.youtube.com/watch?v=" + parts[1]
-
-        # url = "https://vimeo.com/188162829"
-        # thumb = "https://i.vimeocdn.com/video/598151844_130x73.jpg"
-
-        oc.add(VideoClipObject(
-            url=url,
-            title=title,
-            thumb=Resource.ContentsOfURLWithFallback(url=thumb)
-        ))
+        try:
+            title = video.xpath('./title/text()')[0]
+            cdata = video.xpath('./description/text()')[0]
+            datael = HTML.ElementFromString(cdata)
+            thumb = datael.xpath('./p[1]/img/@src')[0]
+            videoinfo = datael.xpath('./p[2]/text()')[0]
+            vinfo = videoinfo[1:-1]
+            parts = vinfo.split()
+            if "vimeo" in parts[0]:
+                url = "https://vimeo.com/" + parts[1]
+            else:
+                url = "https://www.youtube.com/watch?v=" + parts[1]
+            oc.add(VideoClipObject(
+                url=url,
+                title=title,
+                thumb=Resource.ContentsOfURLWithFallback(url=thumb)
+            ))
+        except Exception:
+            Log("An error occurred")
+            continue
     return oc
