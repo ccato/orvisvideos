@@ -42,18 +42,12 @@ def VideoList(title, category, page=1):
 
     for video in videos.xpath('//item'):
         title = video.xpath('./title/text()')[0]
-        Log(title)
         cdata = video.xpath('./description/text()')[0]
-        Log(cdata)
         datael = HTML.ElementFromString(cdata)
         thumb = datael.xpath('./p[1]/img/@src')[0]
-        Log(thumb)
         videoinfo = datael.xpath('./p[2]/text()')[0]
-        Log(videoinfo)
         vinfo = videoinfo[1:-1]
-        Log(vinfo)
         parts = vinfo.split()
-        Log(parts)
         if "vimeo" in parts[0]:
             url = "https://vimeo.com/" + parts[1]
         else:
